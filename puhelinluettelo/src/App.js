@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+// 2.7
+
 const App = () => {
   const [ persons, setPersons] = useState([
     { name: 'Arto Hellas' }
@@ -15,6 +17,12 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+
+    if (persons.some(person => person.name === newName)) {
+      alert(`${newName} already in phonebook`)
+      return
+    }
+
     console.log('button clicked', event.target)
     console.log("addPerson event info: ", event)
     const personObject = {
@@ -47,7 +55,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person, idx) => <Person key={idx} person={person}/>)}
+        {persons.map((person, idx) => <Person key={'person'+idx} person={person}/>)}
       </ul>
     </div>
   )
