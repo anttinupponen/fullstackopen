@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
 
-// 2.7
+// 2.8
 
 const App = () => {
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    {
+      name: 'Arto Hellas',
+      number: '050-020202'
+    }
   ]) 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
   const Person = ({person}) => (
     <li>
-      {person.name}
+      {person.name} {person.number}
     </li>
   )
-
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -23,18 +26,28 @@ const App = () => {
       return
     }
 
-    console.log('button clicked', event.target)
-    console.log("addPerson event info: ", event)
+    if (persons.some(person => person.number === newNumber)) {
+      alert(`${newNumber} already in phonebook`)
+      return
+    }
+
+    // console.log('button clicked', event.target)
+    // console.log("addPerson event info: ", event)
     const personObject = {
-      name: newName
+      name: newName,
+      number: newNumber
     }
     setPersons(persons.concat(personObject))
     setNewName('')
+    setNewNumber('')
   }
 
-  const handleInputChange = (event) => {
-    console.log(event.target.value)
+  const handleNameInputChange = (event) => {
     setNewName(event.target.value)
+  }
+
+  const handleNumberInputChange = (event) => {
+    setNewNumber(event.target.value)
   }
 
   return (
@@ -45,7 +58,13 @@ const App = () => {
         <div>
           name: <input
             value={newName}
-            onChange={handleInputChange}
+            onChange={handleNameInputChange}
+          />
+        </div>
+        <div>
+          number: <input
+            value={newNumber}
+            onChange={handleNumberInputChange}
           />
         </div>
         <div>
