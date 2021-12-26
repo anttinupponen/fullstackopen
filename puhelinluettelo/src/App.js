@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
-// 2.10
+// 2.11
 
 const Filter = ({filter, filterHandler}) => (
   <div>
@@ -17,7 +18,7 @@ const Person = ({person}) => (
 const Contacts = ({contacts, filter}) => (
   <ul>
     {contacts.filter(v => v.name.toLowerCase().includes(filter.toLowerCase()))
-            .map((person, idx) => <Person key={'person'+idx} person={person}/>)}
+            .map((person) => <Person key={'person'+person.id} person={person}/>)}
   </ul>
 )
 
@@ -37,20 +38,20 @@ const PersonForm = ({callback, name, nameHandler, number, numHandler}) => (
 
 
 
-
-
 const App = () => {
   
   // States
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
+
+  useEffect(() => {
+    console.log('effect triggered')
+    axios.get('http://localhost:3001/persons')
+    .then(res => setPersons(res.data))
+    .catch(console.log)
+  }, [])
 
   const nameHandler = (event) => {
     setNewName(event.target.value)
@@ -68,22 +69,27 @@ const App = () => {
     event.preventDefault()
   
     if (persons.some(person => person.name === newName)) {
-      alert(`${newName} already in phonebook`)
+      alert(`${newName} name already in phonebook`)
       return
     }
   
     if (persons.some(person => person.number === newNumber)) {
-      alert(`${newNumber} already in phonebook`)
+      alert(`${newNumber} number already in phonebook`)
       return
     }
   
     const personObject = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: persons.length + 1
     }
     setPersons(persons.concat(personObject))
     setNewName('')
     setNewNumber('')
+
+    axios.post('http://localhost:3001/persons', personObject)
+         .then(console.log)
+         .catch(console.log)
   }
 
   return (
