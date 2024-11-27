@@ -3,3 +3,6 @@ app
 .DS_Store
 .env
 .gitignore
+
+# ignore all folders with dashes in their names and their contents
+*-*/
