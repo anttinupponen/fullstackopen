@@ -9,7 +9,9 @@
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "fly logs",
-    "test": "NODE_ENV=test jest --verbose",
+    "test:users": "NODE_ENV=test node --test tests/user_api.test.js",
+    "test:blogs": "NODE_ENV=test jest --verbose tests/blog_api.test.js",
+    "test:all": "npm run test:users && npm run test:blogs",
     "lint": "eslint ."
   },
   "jest": {
@@ -24,10 +26,13 @@
     "supertest": "^7.0.0"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-async-errors": "^3.1.1",
+    "express-jwt": "^8.4.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3"
   }
 }
