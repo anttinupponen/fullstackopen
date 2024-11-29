@@ -38,7 +38,7 @@ const BlogForm = ({setBlogs, blogs, showNotification}) => {
     setVisible(false)
   }
 
-  return visible ?(
+  return visible ? (
     <form onSubmit={handleSubmit}>
       <div>
         <input
