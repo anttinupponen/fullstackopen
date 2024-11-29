@@ -39,32 +39,41 @@ const BlogForm = ({setBlogs, blogs, showNotification}) => {
   }
 
   return visible ? (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} aria-label="Create new blog">
       <div>
+        <label htmlFor="title">Title:</label>
         <input
+          id="title"
           type="text"
           name="title"
           value={newBlog.title}
           onChange={handleInputChange}
           placeholder="Title"
+          aria-label="Blog title"
         />
       </div>
       <div>
+        <label htmlFor="author">Author:</label>
         <input
+          id="author"
           type="text"
           name="author"
           value={newBlog.author}
           onChange={handleInputChange}
           placeholder="Author"
+          aria-label="Blog author"
         />
       </div>
       <div>
+        <label htmlFor="url">URL:</label>
         <input
+          id="url"
           type="text"
           name="url"
           value={newBlog.url}
           onChange={handleInputChange}
           placeholder="URL"
+          aria-label="Blog URL"
         />
       </div>
       <button type="submit">create</button>

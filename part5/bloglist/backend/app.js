@@ -35,6 +35,11 @@ app.use(middleware.tokenExtractor) // Extracts token from request header, 4.20
 app.use('/api/blogs', blogsRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
+// Make sure this is only added when in test mode
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./tests/testing')
+  app.use('/api/testing', testingRouter)
+}
 
 // Catch-all middleware
 app.use(middleware.unknownEndpoint)

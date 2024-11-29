@@ -24,7 +24,12 @@ const Notification = ({ message, error }) => {
   }
 
   return (
-    <div style={style}>
+    <div
+      role="alert"
+      aria-live="polite"
+      data-testid="notification"
+      style={style}
+    >
       {message}
     </div>
   )

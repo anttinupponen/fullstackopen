@@ -52,11 +52,14 @@ const App = () => {
       <Notification message={notification} error={error}/>
       
       {!user && <LoginForm setError={setError} showNotification={showNotification} setUser={setUser} />}
-      {user && <p>{user.name} logged in <button onClick={logout}>logout</button></p>}
+      {user && (
+        <nav role="navigation" aria-label="user">
+          <span style={{ marginRight: '0.5rem' }}>Logged in as {user.name}</span>
+          <button onClick={logout}>logout</button>
+        </nav>
+      )}
       {user && <BlogForm setBlogs={setBlogs} blogs={blogs} showNotification={showNotification} />}
       {user && <BlogList blogs={blogs} showNotification={showNotification} setBlogs={setBlogs} user={user}/>}
-
-
 
       <footer style={{ marginTop: 20, fontStyle: 'italic' }}>
         Blog app, Department of Questionable Science, Wave University 2024

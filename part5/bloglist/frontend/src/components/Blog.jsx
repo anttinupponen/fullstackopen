@@ -5,18 +5,34 @@ import blogService from '../services/blogs'
 const Blog = ({ blog, showNotification, setBlogs, blogs, user }) => {
   const [shown, setShown] = useState(false)
 
-  const toggleImportance = () => {
+  const toggleShown = () => {
     setShown(!shown)
   }
 
   const blogStyle = {
-    paddingTop: 10,
+    paddingTop: 5,    // Reduced from 10
+    paddingBottom: 2, // Added padding bottom
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
     button: {
       marginLeft: 5,
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      margin: 0,      // Remove default margin
+    },
+    title: {
+      fontSize: '1rem',  // Normal font size
+      margin: 0,         // Remove default margin
+      fontWeight: 'bold' // Keep it distinct
+    },
+    content: {
+      margin: 0,     // Remove default margin
+      padding: '2px 0'  // Add minimal vertical padding
     }
   }
 
@@ -61,25 +77,45 @@ const Blog = ({ blog, showNotification, setBlogs, blogs, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div>{blog.title} by {blog.author}
-        <button style={blogStyle.button} onClick={toggleImportance}>
+    <article role="listitem" aria-label={`${blog.title} by ${blog.author}`} style={blogStyle}>
+      <header style={blogStyle.header}>
+        <h3 style={blogStyle.title}>{blog.title} by {blog.author}</h3>
+        <button 
+          style={blogStyle.button} 
+          onClick={toggleShown}
+          aria-expanded={shown}
+          aria-controls={`blog-${blog.id}-details`}>
           {shown ? 'hide' : 'show'}
         </button>
-      </div>
-      {shown && (
-        <>
-          <div>URL: {blog.url}</div>
-          <div>
-            Likes: {blog.likes}
-            <button style={blogStyle.button} onClick={handleLike}>like</button>
-          </div>
-          <div>Added by {blog.user.name}</div>
-          <div>ID: {blog.id}</div>
-          {blog.user.username === user.username && <button style={blogStyle.button} onClick={handleDelete}>delete</button>}
-        </>
-      )}
-    </div>
+      </header>
+      <section 
+        id={`blog-${blog.id}-details`} 
+        aria-hidden={!shown}>
+        {shown && (
+          <>
+            <p style={blogStyle.content}>URL: {blog.url}</p>
+            <p style={blogStyle.content}>
+              Likes: {blog.likes}
+              <button 
+                style={blogStyle.button} 
+                onClick={handleLike}
+                aria-label={`Like ${blog.title}`}>
+                like
+              </button>
+            </p>
+            <p style={blogStyle.content}>Added by {blog.user.name}</p>
+            {blog.user.username === user.username && (
+              <button 
+                style={blogStyle.button} 
+                onClick={handleDelete}
+                aria-label={`Delete ${blog.title}`}>
+                delete
+              </button>
+            )}
+          </>
+        )}
+      </section>
+    </article>
   )
 }
 
