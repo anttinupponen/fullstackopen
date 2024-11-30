@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
-import { setTimedNotification } from '../reducers/notificationReducer'
-import anecdoteService from '../services/anecdotes'
+
 const style = {
   form: {
     padding: '0',
@@ -39,10 +38,7 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    // create a new anecdote on the server and add it to the state after it's created
-    const newAnecdote = await anecdoteService.createNew(content)
-    dispatch(createAnecdote(newAnecdote))
-    dispatch(setTimedNotification(`You created ${content}`, 5)) // show a notification for 5 seconds
+    dispatch(createAnecdote(content))
   }
 
   return (

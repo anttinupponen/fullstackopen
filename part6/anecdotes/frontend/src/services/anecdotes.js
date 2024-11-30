@@ -15,13 +15,16 @@ const getById = async (id) => {
 }
 
 const createNew = async (content) => {
-  const object = { content, votes: 0 }
-  const response = await axios.post(baseUrl, object)
+  const anecdote = { content, votes: 0 }
+  const response = await axios.post(baseUrl, anecdote)
   return response.data
 }
 
-const update = async (id, newObject) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newObject)
+const update = async (content) => {
+  // to sync with the server state, we would need to get the anecdote from the server first
+  // but suppose this is okay for now
+  const anecdote = { ...content, votes: content.votes + 1 }
+  const response = await axios.put(`${baseUrl}/${content.id}`, anecdote)
   return response.data
 }
 

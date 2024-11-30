@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { setTimedNotification } from '../reducers/notificationReducer'
 import PropTypes from 'prop-types'
 
 const style = {
@@ -61,8 +60,8 @@ const AnecdoteList = () => {
   })
 
   const handleVote = (anecdote) => {
-    dispatch(voteAnecdote(anecdote.id))
-    dispatch(setTimedNotification(`You voted for ${anecdote.content}`, 5))
+    dispatch(voteAnecdote(anecdote))
+    // dispatch(setTimedNotification(`You voted for ${anecdote.content}`, 5))
   }
 
   return (

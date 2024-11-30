@@ -1,20 +1,26 @@
 import { configureStore } from '@reduxjs/toolkit'
-import anecdoteReducer, { setAnecdotes } from './reducers/anecdoteReducer'
+import anecdoteReducer from './reducers/anecdoteReducer'
 import filterReducer from './reducers/filterReducer'
 import notificationReducer from './reducers/notificationReducer'
-import anecdoteService from './services/anecdotes'
+import { setTimedNotification } from './reducers/notificationReducer'
+
+const notificationMiddleware = store => next => action => {
+  if (action.type === 'anecdotes/appendAnecdote') {
+    store.dispatch(setTimedNotification(`You created ${action.payload.content}`, 5))
+  } else if (action.type === 'anecdotes/voteAnecdote') {
+    store.dispatch(setTimedNotification(`You voted for ${action.payload.content}`, 5))
+  }
+  return next(action)
+}
 
 const store = configureStore({
   reducer: {
     anecdotes: anecdoteReducer,
     filter: filterReducer,
     notification: notificationReducer
-  }
-})
-
-
-anecdoteService.getAll().then(anecdotes => {
-  store.dispatch(setAnecdotes(anecdotes)) // replace the initial state with the anecdotes from the server
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(notificationMiddleware)
 })
 
 store.subscribe(() => console.log(store.getState()))
