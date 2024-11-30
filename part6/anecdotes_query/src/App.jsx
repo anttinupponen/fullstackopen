@@ -1,19 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getAnecdotes, updateAnecdote, createAnecdote } from './requests'
-
+import { getAnecdotes, updateAnecdote } from './requests'
+import { useSetNotification } from './NotificationContext'
+import QUERY_KEYS from './queryKeys'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
 const App = () => {
   const queryClient = useQueryClient()
+  const setNotification = useSetNotification()
 
   const updateAnecdoteMutation = useMutation({
     mutationFn: updateAnecdote,
     onSuccess: (anecdote) => {
       console.log('updated anecdote', anecdote)
-      const anecdotes = queryClient.getQueryData('anecdotes')
+      const anecdotes = queryClient.getQueryData(QUERY_KEYS.ANECDOTES)
       console.log('anecdotes', anecdotes)
-      queryClient.setQueryData('anecdotes',
+      setNotification(`Anecdote ${anecdote.content} voted.`)
+      queryClient.setQueryData(QUERY_KEYS.ANECDOTES,
         anecdotes.map(a => a.id === anecdote.id ? anecdote : a))
     }
   })
@@ -23,11 +26,11 @@ const App = () => {
   }
 
   const result = useQuery({
-    queryKey: 'anecdotes',
+    queryKey: QUERY_KEYS.ANECDOTES,
     queryFn: getAnecdotes,
     retry: 2
   })
-  console.log("fetched stuff", result.dataUpdatedAt)
+  // console.log("fetched stuff", result.dataUpdatedAt)
 
   if (result.isLoading) {
     return <div>loading data...</div>
@@ -45,7 +48,7 @@ const App = () => {
 
       <Notification />
       <AnecdoteForm />
-    
+  
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
