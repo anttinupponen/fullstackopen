@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
+import { setTimedNotification } from '../reducers/notificationReducer'
 import PropTypes from 'prop-types'
 
 const style = {
@@ -52,19 +53,27 @@ const Anecdote = ({ anecdote, handleVote }) => {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => {
+    if (state.filter === '') {
+      return state.anecdotes
+    }
+    return state.anecdotes.filter(anecdote => anecdote.content.includes(state.filter))
+  })
+
+  const handleVote = (anecdote) => {
+    dispatch(voteAnecdote(anecdote.id))
+    dispatch(setTimedNotification(`You voted for ${anecdote.content}`, 5))
+  }
 
   return (
     <ul style={style.list}>
-      {anecdotes
+      {[...anecdotes]
       .sort((a, b) => b.votes - a.votes)
       .map(anecdote =>
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
-          handleVote={() =>
-            dispatch(voteAnecdote(anecdote.id))
-          }
+          handleVote={() => handleVote(anecdote)}
         />
       )}
     </ul>
